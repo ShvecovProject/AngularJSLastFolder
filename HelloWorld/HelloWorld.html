@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="../lib/angular.js" type="text/javascript"></script>
+    <script src="helloWorld.js"></script>
+    <title>Hello World</title>
+</head>
+<body ng-app ng-init="name='World'">
+<h1> Hello, {{name}}!</h1>
+<!--
+Простого подключения angular недостаточно. Приожение необходимо активировать.
+Проще всего это сделать, добавив нестандартный html аттрибут ng-app.
+ng-init - используеться для инициализации модели перед отображением шаблона.
+{{name}} - отображает модель
+* Для добавления динамического поведения в статический HTML - документ используеться
+нестандартные теги и аттрибуты html
+* для ограничения выражений, обеспечивающих вывод значений модели, используются
+двойные фигурные скобки( {{}} )
+Все специальные теги и аттрибуты HTMl поддерживаемые фреймворком AngularJS, називаются дерективами.
+-->
+<hr>
+<div ng-init="customName='World'">
+    Enter Your Name:
+    <input type="text" ng-model="customName">
+    <h1>Hello, {{customName}}</h1>
+    <!--
+    Любое изменение в представлении, произведенное пользователем, немедленно отражаеться на модели,
+    а любое изменение в модели немедленно немедленно распространяется на шаблон.
+    */
+    -->
+</div>
+<hr>
+<div ng-controller="HelloWorldCtrl">
+    Enter Your Name:
+    <input type="text" ng-model="name">
+    <h1>Hello, {{name}}</h1>
+    <hr>
+    Enter Your Name:
+    <input type="text" ng-model="name">
+    <h1>Hello, {{getName()}}</h1>
+</div>
+</body>
+</html>
