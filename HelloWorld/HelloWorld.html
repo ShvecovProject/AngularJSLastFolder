@@ -39,5 +39,13 @@ ng-init - используеться для инициализации моде�
     <input type="text" ng-model="name">
     <h1>Hello, {{getName()}}</h1>
 </div>
+<hr>
+<div ng-controller="WorldCtrl">
+    <li ng-repeat="country in countries">
+        {{country.name}} has population of {{country.population}}
+        {{worldsPercentage(country.population)}} % of the world's population
+    </li>
+    World's population: {{population}}
+</div>
 </body>
 </html>
