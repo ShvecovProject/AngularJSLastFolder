@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../lib/angular.js" type="text/javascript"></script>
+    <script src="viewTemplates.js.js"></script>
+</head>
+<body>
+<div class="container" ng-controller="TextAreaWithLimitCtrl">
+<div class="row">
+    <textarea ng-model="message" >{{message}}</textarea>
+</div>
+    <div class="row">
+        <button ng-click="send()" ng-disabled = "remaining()<=0">Send</button>
+        <button ng-click="clear()">Clear</button>
+    </div>
+    <span ng-class="{'text-warning':shouldWarn()}" >
+        Remaining:{{remaining()}}
+    </span>
+</div>
+</body>
+</html>
