@@ -11,7 +11,7 @@ angular.module('hello', [ ]).controller('HelloWorldCtrl', function($scope){
         return $scope.last_name;
     };
 });
-
+//---------------------------------------------------NATIVE JS CODE
 var NotificationService = function() {
     this.MAX_LENGTH = 10;
     this.notificationArchive = new ArtificationArchive();
@@ -24,14 +24,16 @@ NotificationService.prototype.push = function(notification) {
     newLen = this.notifications.unshift(notification);
     if (newLen > this.MAX_LENGTH) {
         notificationToArchive = this.notifications.pop();
-        this.notificationArchive.archive(notificationToArchive;
+        this.notificationArchive.archive(notificationToArchive);
     }
-
+};
+NotificationService.prototype.getCurrent = function(){
+    return this.notifications;
 };
 var ArtificationArchive = function(){
 
 };
-
+// сильная зависимость от реализации ArtificationArchive. Не возможно автоматического тестирования.
 /*
 Сам ангуляр определяет глобальное просторанство имен angular. В нем находятся различные вспомогательные функции и утилиты,
 в число которых входит также функция module.
@@ -61,4 +63,192 @@ var ArtificationArchive = function(){
 Что еще лучше, взаимозаменяемость вспомогательных обьектов позволяет создать различные
 приложения простой заменой одних служб другими.
 
+Регистрация служб
+
+Angular способен связать обьекты которые знакомы ему. По этой причине необходимо зарегестрировать все DI в модуле AngularJS
+В angular существует выделенная служба $provide позволяющая регестрировать различные рецепты создания обьектов.
+Зарегестрированные орецепты затем используються службой $injector для создания к применению экземпляров обьектов со всеми встроенными
+зависимостями.
+Обьекты созданные службой $injector так же назывются службами. Каждый рецепт интерпретируеться фреймворком только один раз в
+течении жизни приложения и как результат создает только один экземпляр обьекта.
+В конечном итоге модуль просто хранит множество экземпляров обьектов, но мы можем управлять порядком их создания.
+
+Значения
+
+Самый простой способ передать обьект под управление фреймворка зарегестрировать его экземпляр:
+                        var myMod = angular.module("myMod",[]);
+                        myMod.value('notify', new Notify());
+
+Любая служба управляемая механизмом DI должна иметь уникальное имя.
+Обьекты значения не представляют интереса так как обьекты регестрируемые этим методом не могут зависить от
+других обьектов. На практике этот метод регестрации нужно использовать для самых простых обьектов(обькты литералы).
+
+Службы
+Самый простой способ зарегестрировать рецепт создания обьектов зависящих от других обьектов  - указать функцию конструктор.
+Сделать это можно с помошью метода service.
+                        myMod.service('notify', NotifyServ);
+                        var NotifyServ = function(notifyArhive){
+                            this.notifyArchive = notifyArhive;
+                        };
+
+Воспользовавшись механимом внедрения зависимостей мы сожем избавиться от ключевого слова new в конструкторе NotifyServ.
+Теперь эта служба не занимаеться созданием экземпляра своей зависимости и может принимать любую другую службу архивирования.
+
+Термин служба - подразумеваеться либо метод service регистрации конструкторов либо произвольный обьект одиночка.
+
+На практике метод service пррименяеться нечасто, но его удобно использовать для регистрации уже имеющихся функций
+конструкторов и тем самым заставить angular управлять созданными обьектвми;
+
+Фабрики
+
+Метод factory  -  еще один способ регистрации рецептов создания обьектов. Он обеспечивает большую гибкость чем метод service/
+так как он способен регестрировать любые функции создающие и возвращающие обьекты.
+                myMod.factory('notifyService', function(notifyArhive){
+                    var MAX_LEN = 10,//private
+                        notifications = [];//private
+                     return {
+                            push: function(notification){
+                            var notifyToArchive, //private
+                              newLen = notifications.unshift(notification);
+                                if (newLen > this.MAX_LENGTH) {
+                                    notifyToArchive = this.notifications.pop();
+                                    notifyArhive.archive(notificationToArchive);
+                                 }
+                            }
+                            //другие методы
+                     };
+                });
+
+Аngular будет использовать указанную фабричную функцию для регистрации возвращаемого обьекта. Им может быть любой
+доступный обьект JS даже функции.
+Метод factory наиболее часто используемый прием регистрации обьектов в подсистеме внедрения зависимостей Angular
+Он обладает большой гибкостью и может принимать достаточно сложную логику создания.
+Так как фабрики являються обычными функциями мы можем использовать новую лексическую область видимсоти для
+имитации private переменных.Это очень удобно когда желательно скрыть тонкости реализации
+
+Константы
+
+Фреймворк позволяет определить константы на уровне модуля и внедрять их в обьекты.
+                    myMode.factory('notifyService', function(notifyArhive, MAX_LEN){
+                    //
+                    });
+
+                    myMod.constant('MAX_LEN',10);
+
+Провайдеры
+Все методы регистрации, описанные к настоящему времени являються лишь частными специальными случаями более универсального
+метода provider.
+                myMode.provider('notifyService', function(){
+                var config = {
+                maxLen:10
+                };
+                var notification=[];
+
+                return{
+                setMaxLen: function(maxLength){
+                    config.maxLen = maxLength||config.maxLen
+                },
+
+                $get:function(notifyArhive)
+                     return {
+                         push: function(notification){
+                                 var notifyToArchive, //private
+                                 newLen = notifications.unshift(notification);
+                                 if (newLen > this.MAX_LENGTH) {
+                                 notifyToArchive = this.notifications.pop();
+                                 notifyArhive.archive(notificationToArchive);
+                                 }
+                         }
+                     //другие методы
+                     };
+                };
+
+                });
+
+В первую очередь провайдер это функция которая должна вернуть обьект оладающий свойством $get.
+Свойство get  это фабричная функция возвращающая экземпляр службы. Проввайдеры можно считать обьектами
+встраивающими фабричные функции в свое свойство $get.
+
+Обьект возвращаемыый функцией provider  может иметь дополнительные методы и свойства. Эти методы и свойства можно
+использовать для определения парамеров настроек перед вызовом фабричного метода $get.
+
+Жизненный цикл модулей
+
+Для эффективной поддержки провайдеров ангуляр разбивает жизненный цикл модуля на 2 фазы:
+1) фаза настройки: в течении данной фазы производится сбор и настройка всех рецептов
+2) фаза выполнения: в течении этой фазы выполняется любая логика после создания экземпляров.
+
+Фаза настройки
+
+Провайдеры могут настраиваться только в ходе первой фазы. Настройка выполняется так:
+myMod.config(function(notifyServiceProvider){
+        notifyServiceProvider.setMaxLen(15);
+});
+
+ notifyServiceProvider = notifyService необходимо окончание Povider
+
+ Фаза выполнения:
+
+Наличия фазы выполнения позволяет регестрировать любые задания которые должны
+быть выполнены в ходе инициализации приложения. Фазу выполнения можно сравнить с методом main()
+Основное отличие состоит в том что модули могут иметь несколько блоков настройки и выполнения
+Тоесть нет единственной точки входа.
+Чтобы показать ценность фазы выаполнения покажем время запуска приложения.
+angular.module('upTimeApp',[]).run(function($rootScope){
+ $rootScope.appStarted = new Date();
+});
+
+Зависимости между модулями
+
+Angular не только хорошо справляеться сзависимостями обьектов но и способен обрабатывать
+зависимости между модулями. Можно сгруппировать взаимосвязанные млужбы в один модуль и тем самым
+ создатть библеотеку служб.
+ Например мы можем определить службы извещений и архивирования в собственные модули и затем их
+ обьединить.
+
+    angular.module('application',['notifications', 'archive']);
+Тиким способом можно каждую службу встроить в модуль пригодный для повторного испльзования.
+
+
+Службы и их доступность в модулях.
+Службы определенные в дочерних модулях доступны для внедрения в службы обьявленные в родительских
+модулях.
+
+angular.module('app',['engines'])
+
+        .factory('car',function($log, dieselEngine){
+                return {
+                        start: function(){
+                               $log.info('Starting' + dieselEngine.type);
+                        }
+                };
+        });
+
+        angular.module('engines',[])
+            .factory('dieselEngine', function(){
+                    return {
+                        type:'diesel'
+                    };
+            });
+переопределение службы.
+
+            angular.module('app',['engine','cars']);
+            .controller('AppCtrl', function($scope, car){
+                car.start();
+            });
+
+            angular.module('cars',[])
+                .factory('car', function($log, dieselEngine){
+                    return {
+                            start:function(){
+                                $log.info('Starting' + dieselEngine.type);
+                            };
+                    };
+
+                });
+               !!!! .factory('dieselEngine',function(){
+                        return {
+                            type:"custom engine"
+                        };
+                });
  */
