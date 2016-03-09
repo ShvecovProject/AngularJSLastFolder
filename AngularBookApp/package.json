@@ -1,0 +1,18 @@
+{
+  "name": "shvecovapp",
+  "version": "1.0.0",
+  "description": "AngularBookApp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shvecov",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^0.4.5"
+  },
+  "dependencies": {
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}
