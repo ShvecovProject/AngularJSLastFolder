@@ -2,7 +2,7 @@
  * Created by Shvecov_Evgeniy on 10.03.2016.
  */
 angular.module("app",[])
-.controller("UserCtrl",function($scope, $http){
+.controller("UserCtrl",function($scope, $http,$log){
 
     $scope.addUserToStore = function(){
         var model = {
@@ -34,13 +34,15 @@ angular.module("app",[])
                         apiKey:"H7NnGFZwutQwxFP6T8Kc_XhkQe4Z4ygX"
                     }
                 })
-                .success(function(data, status, headers, config){
-                    $scope.users = data;
-                    console.log(data);
-                })
-                .error(function(data, status, headers, config){
-
+                .then(function(response){
+                    $scope.users = response.data;
+                   $log.info(response);
+                },function(response){
+                    $log.warn(response)
                 });
+                /*.error(function(data, status, headers, config){
+
+                });*/
         }
         $scope.users= $scope.getAllUsers();
 
