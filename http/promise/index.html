@@ -14,6 +14,14 @@
             {{user.userName +":" + user.userEmail}}
         </li>
     </ul>
+
+    <div class="addUser">
+        <label>UserName:</label>
+        <input type="text" ng-model="userName">
+        <label>E-mail:</label>
+        <input type="text" ng-model="userEmail">
+        <button type="button" ng-click="addUserToStore()">Save user</button>
+    </div>
 </div>
 </body>
 </html>

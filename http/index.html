@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="customResourceDemo">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../lib/angular.js"></script>
+    <script src="Http.js"></script>
+    <script src="module.js"></script>
+</head>
+<body>
+<div ng-controller="CustomResourceCtrl">
+    <ul>
+        <li ng-repeat="user in users">
+            {{user.userName + ':' + user.userEmail}}
+        </li>
+    </ul>
+    <div class="addUser">
+        <label>UserName:</label>
+        <input type="text" ng-model="userName">
+        <label>E-mail:</label>
+        <input type="text" ng-model="userEmail">
+        <button type="button" ng-click="addUserToStore()">Save user</button>
+    </div>
+</div>
+</body>
+</html>
