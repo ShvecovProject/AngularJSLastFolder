@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <script src="../../lib/angular.js"></script>
-<script src="../../lib/angular-resource.js"></script>
+    <script data-require="angular.js@1.0.x" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js" data-semver="1.0.7"></script>
+    <script src="http://code.angularjs.org/1.0.7/angular-resource.js"></script>
 <script type="text/javascript" src="app.js"></script>
 </head>
 <body>
 <div ng-controller="ResourceCtrl">
     <ul>
         <li ng-repeat=" user in users">
-            {{user.userName +":" + user.userEmail}}}
+            {{user.userName +":" + user.userEmail}}
         </li>
     </ul>
 </div>

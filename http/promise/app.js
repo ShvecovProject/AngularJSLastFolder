@@ -16,12 +16,12 @@ it('should illustrate basic usage of $q',function(){
     pizzaDelvered.then(pawel.eat, pawel.beHungry)
 });*/
 
-angular.module('myApp',['ngResource','ngRoute'])
-.factory('Users',function($resource){
+angular.module('myApp',['ngResource'])
+.factory('Users',function($resource,$http,$log){
        return $resource(
            'https://api.mlab.com/api/1/databases/scrumusers/collections/users/:id',
            {
-               apiKey:'',
+               apiKey:'H7NnGFZwutQwxFP6T8Kc_XhkQe4Z4ygX',
                id:'@_id.$oid'
            }
        )
