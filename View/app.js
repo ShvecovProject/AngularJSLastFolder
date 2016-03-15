@@ -2,6 +2,20 @@
  * Created by Shvecov_Evgeniy on 11.03.2016.
  */
 angular.module("ViewDataInAngular",[])
+    .constant("USERS",[{
+        userName:"EvgeniySh",
+        userEmail:"evgeshvecov@yandex.ru",
+        desc:"First User"
+    },{
+        userName:"Yakov Shvecov",
+        userEmail:"yShvecov@gmail.com",
+        desc:"Last User"
+    },
+        {
+            userName:"Yakov Shvecov2",
+            userEmail:"yShvecov@gmail.com",
+            desc:"Last 2User"
+        }])
 /*
 *  К любой дерективе можно обратиться с шаблона  множестваом разных эквивалентных имен.
 *  ngModel === data-ng-model===x-ng-Model и тд.
@@ -45,4 +59,72 @@ angular.module("ViewDataInAngular",[])
  *
  *   ng-if - добавляет и удаляет элементы.
  *   <div ng-if="expression">Secrets</div>
+ *   Включение блоков содержимого:
+ *   Деректива ng-include: способна загружать и отображать фрагменты содержимого, опираясь на результат вычесления выражения.
+ *   С ее помошью можно включить различные формы в зависимости от роли, присвоенной пользователю.
+ *   Следующий фрагмент загружает разные фрагменты для обычных пользователей и фдминистраторов.
+ *   <div ng-include="user.admin && 'edit.admin.html'||'eit.user.html'">
+ *   </div>
+ *   Отображение кол-ций с помошью ngRepeat
+ *  Выполняет итерации по элементам коллекции и для каждого элемента создает новый html элемент.Она постоянно следит за источником данных,
+ *  и повторно отображает шаблон обнаружив какие либо изменения.
+ *  Встроенная реализация ng-repeat- может перемещать узлы по ждереву DOM c места на место, удалять их, вставлять новые узлы.
+ *  Действует подобно механизму наблюдения за данными, который пытаеться соевременно отобразить исходную коллекцию с данными в
+ *  коллекцию html узлов. Процесс наблюдения за данными протекает непрерывно.
+ *
+ *
  *    * */
+
+.controller('repeaterCtrl',function($scope,USERS){
+        $scope.users=USERS;
+
+    })
+/*
+ Специальные переменные:
+ Данные переменные могут использоваться для определения позиции элемента в коллекции
+ 1) $index - индекс элемента в коллекции(нумерация с 0)
+ 2) $first, $middle, $last - логическое значение, соответствующие позиции элемента.
+ пример:
+ <li ng-repeat="breadcrumb in breadcrumbs.getAll()">
+    <span class="divider"></span>
+    <ng-switch on="$last">
+        <span ng-switch-when="true">{{breadcrumb.name}}</span>
+        <span ng-switch-default>
+            <a href="{{breadcrumb.path}}">{{breadcrumb.name}}</a>
+        </span>
+    </ng-switch>
+ </li>
+
+ итерации по свойствам обьекта
+ <li ng-repeat="(name, value) in user">
+    Property {{$index}} with {{name}} has value {{value}}
+ </li>
+
+
+ */
+
+.controller("DetailsUsrCtrl",function($scope,USERS){
+        $scope.users=USERS;
+        $scope.selectUser = function(user){
+            $scope.selectedUser = user;
+        };
+        $scope.isSelected = function(user){
+            return $scope.selectedUser === user;
+        }
+    })
+.controller("MultiSelectCtrl",function($scope, USERS){
+        $scope.toggleSelected = function(){
+            $scope.selected  = !$scope.selected;
+        };
+        $scope.isSelected = function(){
+            return $scope.selected;
+        }
+
+})
+    .controller('ngRepeatCtrl',function($scope,USERS){
+        $scope.users = USERS;
+    })
+/*
+Если контроллер определяеться на уровне того же элемента DOM что и деректива ng-repeat, она будет действовать в рамках
+нового контекста, создаваемого директивой повторения.
+ */

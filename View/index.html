@@ -3,10 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link href="../lib/bootstrap/css/bootstrap.css" rel="stylesheet">
     <script type="text/javascript" src="../lib/angular.js"></script>
     <script type="text/javascript" src="app.js"></script>
-</head>
-<body>
 
+</head>
+<body ng-app="ViewDataInAngular">
+<div ng-controller="repeaterCtrl">
+    <ul>
+        <li ng-repeat="user in users">{{user.userName +": "+ user.userEmail}}</li>
+    </ul>
+</div>
+<hr>
+<div ng-controller="DetailsUsrCtrl">
+    <table class="table table-bordered">
+        <tbody ng-repeat="user in users" ng-click="selectUser(user)" ng-switch on="isSelected(user)" >
+            <tr ng-class="{'dark-gray': !$index%2, 'light-gray':$index%2}">
+                <td>{{$index}}</td>
+                <td>{{user.userName}}</td>
+                <td>{{user.userEmail}}</td>
+            </tr>
+        <tr ng-switch-when="true">
+            <td colspan="2">{{user.desc}}</td>
+        </tr>
+        </tbody>
+    </table>
+<hr>
+    <table class="table table-bordered">
+        <tbody ng-repeat="user in users" ng-controller="MultiSelectCtrl" ng-click="toggleSelected()" ng-switch on="isSelected()">
+        <tr>
+            <td>{{user.userName}}</td>
+            <td>{{user.userEmail}}</td>
+        </tr>
+        <tr ng-switch-when="true">
+            <td colspan="2">{{user.desc}}</td>
+        </tr>
+    </table>
+</div>
+
+<div ng-controller="ngRepeatCtrl">
+    <ul>
+        <li ng-repeat-start="user in users">
+            <strong>{{user}}</strong>
+
+        </li>
+        <li ng-repeat-end="">{{user.desc}}</li>
+    </ul>
+</div>
 </body>
 </html>
