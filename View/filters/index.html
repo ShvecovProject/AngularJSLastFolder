@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html ng-app="FiltersApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../lib/angular.js" type="text/javascript"></script>
+    <script src="app.js" type="text/javascript"></script>
+    <script src="../../lib/jquery-2.2.1.min.js" type="text/javascript"></script>
+    <script src="../../lib/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../../lib/bootstrap/css/bootstrap-theme.css">
+
+</head>
+<body>
+
+<div ng-controller="FilterOneCtrl">
+  <div class="well">
+    <label>
+        Search for:<input type="text" ng-model="criteria">
+    </label>
+  </div>
+    <table class="table table-bordered">
+        <thead>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Estimation</th>
+        <th>Done?</th>
+        </thead>
+        <tbody>
+        <!--<tr ng-repeat="project in projects | filter:criteria">!-->
+       <!-- <tr ng-repeat="project in projects | filter:{name:criteria||''}">!-->
+        <tr ng-repeat="project in projects | filter:doneAndBigEffort">
+            <td>{{project.name}}</td>
+            <td>{{project.description}}</td>
+            <td>{{project.priority}}</td>
+            <td>{{project.estimation}}</td>
+            <td>{{project.isDone}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<div ng-controller="GetCountRecordsCtrl">
+    <div class="well">
+        <label>
+            Search for:<input type="text" ng-model="criteria">
+        </label>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Priority</th>
+        <th>Estimation</th>
+        <th>Done?</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="project in filterProject = (projects | filter:{name:criteria||'',isDone:true})">
+            <td>{{project.name}}</td>
+            <td>{{project.description}}</td>
+            <td>{{project.priority}}</td>
+            <td>{{project.estimation}}</td>
+            <td>{{project.isDone}}</td>
+            Total:{{filterProject.length}}
+        </tr>
+        </tbody>
+
+    </table>
+    </div>
+<hr>
+<div ng-controller="OrderByCtrl">
+        <div class="well">
+            <label>
+                Search for:<input type="text" ng-model="criteria">
+            </label>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+            <th data-ng-click ="sort('name')">Name
+            <i ng-class="{'icon-chevron-up':isSortUp('name'), 'icon-chevron-down':isSortDown('name')}"></i>
+            </th>
+            <th data-ng-click ="sort('description')">Description</th>
+            <th data-ng-click ="sort('priority')">Priority</th>
+            <th data-ng-click ="sort('estimation')">Estimation</th>
+            <th data-ng-click ="sort('isDone')">Done?</th>
+            </thead>
+            <tbody>
+            <tr ng-repeat="project in filterProject = (projects | filter:{name:criteria||''}| orderBy:sortField:reverse)">
+                <td>{{project.name}}</td>
+                <td>{{project.description}}</td>
+                <td>{{project.priority}}</td>
+                <td>{{project.estimation}}</td>
+                <td>{{project.isDone}}</td>
+                Total:{{filterProject.length}}
+            </tr>
+            </tbody>
+
+        </table>
+</div>
+<hr>
+<div data-ng-controller="SplitArrayDataCtrl">
+    <div class="well">
+        <label>
+            Search for:<input type="text" ng-model="criteria">
+        </label>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <th data-ng-click ="sort('name')">Name
+            <i ng-class="{'icon-chevron-up':isSortUp('name'), 'icon-chevron-down':isSortDown('name')}"></i>
+        </th>
+        <th data-ng-click ="sort('description')">Description</th>
+        <th data-ng-click ="sort('priority')">Priority</th>
+        <th data-ng-click ="sort('estimation')">Estimation</th>
+        <th data-ng-click ="sort('isDone')">Done?</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="project in filterProject = (projects |  pagination:pageNo:pageSize)">
+            <td>{{project.name | trim:5}}</td>
+            <td>{{project.description}}</td>
+            <td>{{project.priority}}</td>
+            <td>{{project.estimation}}</td>
+            <td>{{project.isDone}}</td>
+            Total:{{filterProject.length}}
+        </tr>
+        </tbody>
+    </table>
+</div>
+<hr>
+<div data-ng-controller="testNgModelCtrl">
+    <div> Hello
+        <span data-ng-bind="name"/>
+    </div>
+    <div>Hello:
+        <input data-ng-model="name"/>
+    </div>
+</div>
+
+<hr>
+<div data-ng-controller="angularFormsCtrl">
+<h1> User Info</h1>
+    <label>E-mail</label>
+    <input type="email" data-ng-model="user.email">
+
+    <label>LastName</label>
+    <input type="text" data-ng-model="user.lastName">
+
+    <label>FirstName</label>
+    <input type="text" data-ng-model="user.firstName">
+
+    <label>Website</label>
+    <input type="text" data-ng-model="user.website">
+
+    <label>Description</label>
+    <textarea type="text" data-ng-model="user.description"></textarea>
+
+    <label> Password</label>
+    <input type="password" data-ng-model="user.password"
+           data-ng-required data-ng-minlength="3"
+           data-ng-maxlength="10">
+
+    <label>Repeat Password</label>
+    <input type="password" data-ng-model="repeatPassword">
+
+    <label>Roles</label>
+   <label class="checkbox">
+       <input type="checkbox"
+        data-ng-true-value="admin"
+        data-ng-false-value = "basic"
+        data-ng-model="user.admin"> Is Administrator
+   </label>
+
+    <label>
+        <input type="radio" data-ng-model="user.sex" value="male">
+        Male
+    </label>
+<label>
+    <input type="radio" data-ng-model="user.sex" value="female">
+    Female
+</label>
+<select data-ng-model="user.sex">
+    <option value="m" data-ng-selected="sex=='m'">Male</option>
+    <option value="f" data-ng-selected="sex=='f'">Female</option>
+</select>
+
+<select data-ng-model="user.selectedItem" ng-options="project.id as project.name for project in projects"></select>
+
+    <select ng-model="user.chosenCountryCode" ng-options="code as name for (name, code) in countriesByName"></select>
+    <select ng-model="user.chosenCountryCode" ng-options="code as name for (code, name) in countriesByCode">
+        <option value="" style="display: none "></option>
+    </select>
+    <select ng-model="user.arrayDataSource" multiple ng-options="label  as label for label in arrayDataSource">
+        <option value="">---No Selection---</option>
+    </select>
+
+<pre data-ng-bind="user |json"></pre>
+</div>
+</body>
+</html>

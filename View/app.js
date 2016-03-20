@@ -121,7 +121,7 @@ angular.module("ViewDataInAngular",[])
         }
 
 })
-    .controller('ngRepeatCtrl',function($scope,USERS){
+    .controller('StartRepeatCtrl',function($scope,USERS){
         $scope.users = USERS;
     })
 /*
