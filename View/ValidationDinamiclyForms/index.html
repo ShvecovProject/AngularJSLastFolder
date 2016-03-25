@@ -29,10 +29,11 @@
     </div>
     <button ng-disabled="!canSave()">Save</button>
     <ng-include src="'password-form'"></ng-include>
-    <pre ng-bind="toJSON(UserInfoForm)"></pre>
+
 
 
 </form>
+
 </div>
 
 <script type="text/ng-template" id="password-form">
@@ -46,6 +47,33 @@
         <input type="password" required data-ng-model="user.password2">
     </ng-form>
 </script>
+<div data-ng-controller="RepeatCtrl">
+    <label>Web Sites</label>
+    <div data-ng-repeat="website in users.userWebSites">
+        <input type="text" data-ng-model="website.url">
+        <button data-ng-click="removeWebSite($index)">Remove</button>
+    </div>
+    <button data-ng-click="addWebSite()">Add</button>
+</div>
 
+<div data-ng-controller="ValidationGenericItemsCtrl">
+<form novalidate name="userForm">
+    <label>Websites</label>
+    <div data-ng-show="userForm.$invalid">The User Form is invalid.</div>
+    <div data-ng-repeat="website in users.userWebSites" ng-form="webSiteForm">
+        <input type="url" name="website" data-ng-model="website.url" required>
+        <button data-ng-click="removeWebSite($index)">Remove</button>
+        <span data-ng-show="showError(webSiteForm.website,'url')">
+            Please must enter valid web-site!
+        </span>
+        <span data-ng-show="showError(webSiteForm.website,'required')">
+            This field is required.
+        </span>
+
+    </div>
+    <button data-ng-click="addWebSite()">Add</button>
+</form>
+</div>
+<pre ng-bind="toJSON(UserInfoForm)"></pre>
 </body>
 </html>

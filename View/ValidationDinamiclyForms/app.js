@@ -20,6 +20,34 @@ angular.module("ValidationGenericApp",[])
             return $scope.UserInfoForm.$dirty && $scope.UserInfoForm.$valid;
         }
     })
+.controller("RepeatCtrl", function($scope){
+      $scope.users={
+          userWebSites:[                    // не можно использовать массив строк. Так как строки передаються по значению из-за чего при попытке
+              {url:"www.yandex.ru"},        // адресс в поле ввода связь между строкой в блоке ng-repeat будет утеряна.
+              {url:"www.vk.com"}
+          ]
+      };
+        $scope.removeWebSite = function(index){
+            $scope.users.userWebSites.splice(index,1);
+        };
+        $scope.addWebSite = function(){
+            $scope.users.userWebSites.push({url:''});
+        };
+    })
+.controller("ValidationGenericItemsCtrl",function($scope){
+        $scope.users={
+            userWebSites:[                    // не можно использовать массив строк. Так как строки передаються по значению из-за чего при попытке
+                {url:"http://www.yandex.ru"},        // адресс в поле ввода связь между строкой в блоке ng-repeat будет утеряна.
+                {url:"http://www.vk.com"}
+            ]
+        };
+        $scope.showError=function(ngModelController, error){
+            return ngModelController.$error[error];
+        };
+        $scope.addWebSite = function(){
+            $scope.users.userWebSites.push({url:''});
+        };
+    })
 /*
 ngFormController
 Каждая директива form или ngForm создает экземпляр контроллера ngFormController
